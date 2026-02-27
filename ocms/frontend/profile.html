@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning - OCMS.IO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Premium Obsidian */
+            --bg-color: #0B0F19;
+            --primary: #4F46E5;
+            /* Electric Indigo */
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --secondary: #06B6D4;
+            /* Brilliant Cyan */
+            --tertiary: #22D3EE;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at top right, rgba(139, 92, 246, 0.1), transparent 50%),
+                radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.05), transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Profile Header */
+        .profile-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 3rem;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-hero::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            filter: blur(100px);
+            opacity: 0.2;
+            border-radius: 50%;
+        }
+
+        .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            z-index: 1;
+        }
+
+        .avatar-large {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 20px 40px -10px var(--primary-glow);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .user-details h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-details p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-details p::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            z-index: 1;
+        }
+
+        /* Achievements / Badges */
+        .achievements-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Action Buttons */
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px var(--primary-glow);
+            filter: brightness(1.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border-color: var(--glass-border);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #fff;
+        }
+
+        /* Dashboard Link Card */
+        .analytics-teaser {
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            padding: 2.5rem 3rem;
+            border-radius: 32px;
+            margin-bottom: 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-teaser::before {
+            content: '📈';
+            position: absolute;
+            right: -20px;
+            bottom: -40px;
+            font-size: 15rem;
+            opacity: 0.03;
+            transform: rotate(-15deg);
+        }
+
+        .teaser-content h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--tertiary);
+        }
+
+        .teaser-content p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        /* Courses Grid */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-header h2::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 6px;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--secondary);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-thumbnail {
+            height: 180px;
+            background-color: #1e293b;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .card-thumbnail::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, var(--card-bg));
+        }
+
+        .card-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .course-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .course-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 10px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .percent-badge {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            background: -webkit-linear-gradient(0deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .continue-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .continue-btn:hover {
+            background: #fff;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .profile-hero {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 2rem;
+            }
+
+            .user-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .user-details h1 {
+                font-size: 2.5rem;
+            }
+
+            .analytics-teaser {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="profile-hero">
+            <div class="user-meta">
+                <div class="avatar-large" id="avatarChar">U</div>
+                <div class="user-details">
+                    <h1 id="profileName">Elite Student</h1>
+                    <p id="profileEmail">active_member@ocms.io</p>
+                    <div class="achievements-bar">
+                        <span class="badge"><span class="badge-icon">🔥</span> Early Adopter</span>
+                        <span class="badge"><span class="badge-icon">⭐</span> Top 10% Learner</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <a href="/" class="btn btn-outline">🏠 Dashboard Home</a>
+                <button onclick="logout()" class="btn btn-primary">Sign Out 🚪</button>
+            </div>
+        </header>
+
+        <section class="analytics-teaser">
+            <div class="teaser-content">
+                <h3>Neural Insights & Growth</h3>
+                <p>Monitor your performance across the entire learning ecosystem.</p>
+            </div>
+            <a href="/dashboard/" class="btn btn-primary" style="background: var(--tertiary);">Launch Analytics Center
+                ⚡</a>
+        </section>
+
+        <div class="section-header">
+            <h2>Active Missions</h2>
+            <div style="color: var(--tertiary); font-weight: 700; font-size: 1.1rem; background: rgba(14, 165, 233, 0.1); padding: 0.5rem 1rem; border-radius: 100px; border: 1px solid rgba(14, 165, 233, 0.3);"
+                id="courseCount">0 Core Datasets</div>
+        </div>
+
+        <div class="course-grid" id="enrolledList">
+            <!-- Courses loaded dynamically -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-dim);">
+                Retrieving your progress matrix...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('access');
+        if (!token) window.location.href = '/login/';
+
+        // Beautiful placeholder images for courses without thumbnails
+        const fallbackImages = [
+            'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800',
+            'https://images.unsplash.com/photo-1531297172867-4d1cccdb93cb?auto=format&fit=crop&q=80&w=800'
+        ];
+
+        async function loadProfile() {
+            try {
+                // Load User Info
+                const userRes = await fetch('http://127.0.0.1:8000/api/users/me/', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (userRes.ok) {
+                    const user = await userRes.json();
+                    const name = user.full_name || user.username;
+                    document.getElementById('profileName').textContent = name;
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('avatarChar').textContent = name[0].toUpperCase();
+                }
+
+                // Load Enrollments
+                const enrollRes = await fetch('http://127.0.0.1:8000/api/enrollments/my/', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (enrollRes.ok) {
+                    const enrollments = await enrollRes.json();
+                    const list = document.getElementById('enrolledList');
+                    document.getElementById('courseCount').textContent = `${enrollments.length} Core Datasets`;
+
+                    if (enrollments.length === 0) {
+                        list.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; padding: 5rem 2rem; background: var(--card-bg); border-radius: 32px; border: 1px dashed rgba(236, 72, 153, 0.4);">
+                                <div style="font-size: 4rem; margin-bottom: 1rem;">🌌</div>
+                                <h3 style="margin-bottom: 1rem; font-size: 1.8rem; color: #fff;">No active missions</h3>
+                                <p style="color: var(--text-dim); margin-bottom: 2rem; font-size: 1.1rem;">Start your journey by exploring our premium knowledge library.</p>
+                                <a href="/courses/" class="btn btn-primary" style="display: inline-flex;">Explore Courses</a>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    list.innerHTML = '';
+                    enrollments.forEach((en, idx) => {
+                        const progress = en.total_lectures > 0 ? Math.round((en.completed_lectures / en.total_lectures) * 100) : 0;
+                        const fallbackImg = fallbackImages[idx % fallbackImages.length];
+                        const imgUrl = en.course.thumbnail_url && en.course.thumbnail_url !== 'null' ? en.course.thumbnail_url : fallbackImg;
+
+                        const card = document.createElement('div');
+                        card.className = 'course-card';
+                        card.innerHTML = `
+                            <div class="card-thumbnail" style="background-image: url('${imgUrl}')"></div>
+                            <div class="card-content">
+                                <h3>${en.course.title}</h3>
+                                <div class="course-stats">
+                                    <span>Sync Progress</span>
+                                    <span>${en.completed_lectures}/${en.total_lectures} Modules</span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-fill" style="width: ${progress}%"></div>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="percent-badge">${progress}%</div>
+                                    <a href="/course-detail/?id=${en.course.id}" class="continue-btn">Resume ▸</a>
+                                </div>
+                            </div>
+                        `;
+                        list.appendChild(card);
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        loadProfile();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+Total Users: 4
+--------------------------------------------------
+Email:    rachamadugujohith@gmail.com
+Username: rachamadugujohith@gmail.com
+Active:   True
+Auth(username=rachamadugujohith@gmail.com, pw='password123'): FAIL
+Auth(email=rachamadugujohith@gmail.com, pw='password123'): FAIL
+Auth(username=rachamadugujohith@gmail.com, pw='123'): FAIL
+--------------------------------------------------
+Email:    racha@gmail.com
+Username: racha@gmail.com
+Active:   True
+Auth(username=racha@gmail.com, pw='password123'): FAIL
+Auth(email=racha@gmail.com, pw='password123'): FAIL
+Auth(username=racha@gmail.com, pw='123'): FAIL
+--------------------------------------------------
+Email:    sri@gmail.com
+Username: sri@gmail.com
+Active:   True
+Auth(username=sri@gmail.com, pw='password123'): FAIL
+Auth(email=sri@gmail.com, pw='password123'): FAIL
+Auth(username=sri@gmail.com, pw='123'): FAIL
+--------------------------------------------------
+Email:    diag_test@example.com
+Username: diag_test
+Active:   True
+Auth(username=diag_test@example.com, pw='password123'): FAIL
+Auth(email=diag_test@example.com, pw='password123'): FAIL
+Auth(username=diag_test@example.com, pw='123'): FAIL
+--------------------------------------------------
+USERNAME_FIELD: email

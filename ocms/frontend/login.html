@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gateway - OCMS.IO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Premium Obsidian */
+            --bg-color: #0B0F19;
+            --primary: #4F46E5;
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.1), transparent 40%);
+            overflow: hidden;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            filter: blur(120px);
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            padding: 3.5rem;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .brand-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .brand h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            transition: color 0.3s;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--glass-border);
+            padding: 1.25rem;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input:focus+label {
+            color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            padding: 1.25rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px -5px var(--primary-glow);
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px -5px var(--primary-glow);
+            background: #2563eb;
+        }
+
+        .error-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: none;
+            text-align: center;
+        }
+
+        .card-footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+        }
+
+        .card-footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 2px;
+        }
+
+        .card-footer a:hover {
+            color: var(--primary);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="brand">
+                <span class="brand-logo">OCMS.IO</span>
+                <h2 id="loginTitle">Welcome Back</h2>
+                <p id="loginSubtitle">Enter your station credentials</p>
+            </div>
+
+            <div id="errorMsg" class="error-box"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Identity / Email</label>
+                    <input type="email" id="email" placeholder="agent@ocms.io" required>
+                </div>
+                <div class="form-group">
+                    <label>Access Key / Password</label>
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"
+                        required>
+                </div>
+                <button type="submit" class="btn-submit">Initialize Session</button>
+            </form>
+
+            <div class="card-footer">
+                New researcher? <a href="/register/">Create Account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('registered')) {
+            document.getElementById('loginTitle').textContent = 'Node Created';
+            document.getElementById('loginSubtitle').textContent = 'Identity verified, please sign in';
+            document.getElementById('loginSubtitle').style.color = '#10b981';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.style.display = 'none';
+
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/token/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const tokens = await response.json();
+                    localStorage.setItem('access', tokens.access);
+                    localStorage.setItem('refresh', tokens.refresh);
+                    window.location.href = '/';
+                } else {
+                    errorDiv.textContent = 'Invalid credentials. Access denied.';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (err) {
+                errorDiv.textContent = 'Neural link failure. Try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+/* Global Styles */
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #ec4899;
+    --bg-dark: #0f172a;
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+}

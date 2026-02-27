@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligence Center - OCMS.IO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Premium Obsidian */
+            --bg-color: #0B0F19;
+            --primary: #4F46E5;
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --secondary: #06B6D4;
+            --secondary-glow: rgba(6, 182, 212, 0.4);
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+            --accent-green: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.05), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05), transparent 40%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 4rem;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .page-title h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to bottom, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-title p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .refresh-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Blocks */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem;
+            border-radius: 32px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-trend {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trend-up {
+            color: var(--accent-green);
+        }
+
+        /* Charts Section */
+        .analytics-main {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-secondary {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 3rem;
+            border-radius: 32px;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .chart-card h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .activity-item {
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 18px;
+            border-left: 4px solid var(--primary);
+            font-size: 0.95rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .activity-item.review {
+            border-left-color: var(--secondary);
+        }
+
+        .activity-item .user {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .activity-item .time {
+            float: right;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .leaderboard-table td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .mentor-name {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .mentor-stats {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .rating-chip {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+            padding: 0.25rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 3rem;
+            border-radius: 32px;
+            backdrop-filter: blur(20px);
+        }
+
+        .chart-card h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            min-height: 400px;
+        }
+
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-color);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--glass-border);
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .analytics-main {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingOverlay">
+        <div class="loader"></div>
+        <p style="color: var(--text-dim); font-weight: 500;">Aggregating neural analytics...</p>
+    </div>
+
+    <div class="container">
+        <nav>
+            <a href="/" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+                Return to Home
+            </a>
+            <a href="/" class="logo">Intelligence</a>
+        </nav>
+
+        <header>
+            <div class="page-title">
+                <h1>Execution Metrics</h1>
+                <p>Real-time telemetry and engagement distribution.</p>
+            </div>
+            <button class="refresh-btn" onclick="location.reload()">Sync Data</button>
+        </header>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <span class="stat-label">System Nodes</span>
+                <div class="stat-value" id="valUsers">0</div>
+                <div class="stat-trend trend-up">↑ Total Users registered</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Knowledge Assets</span>
+                <div class="stat-value" id="valCourses">0</div>
+                <div class="stat-trend" id="valHours">0h content</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Neural Links</span>
+                <div class="stat-value" id="valEnrollments" style="color: var(--primary);">0</div>
+                <div class="stat-trend trend-up" id="valGrowth">+0 recent</div>
+            </div>
+            <div class="stat-card" style="border-color: var(--secondary-glow);">
+                <span class="stat-label">Satisfaction Index</span>
+                <div class="stat-value" id="valRating">0.0</div>
+                <div class="stat-trend" style="color: #fbbf24;">★ Avg Rating</div>
+            </div>
+        </div>
+
+        <div class="analytics-main">
+            <div class="chart-card">
+                <h2>📊 Engagement Density</h2>
+                <div class="chart-container">
+                    <canvas id="enrollmentsChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h2>⭐ Quality Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="ratingsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-secondary">
+            <div class="chart-card">
+                <h2>🎯 Category Saturation</h2>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h2>⚡ Live Activity Nexus</h2>
+                <div class="activity-feed" id="activityFeed">
+                    <p style="color: var(--text-dim)">Initializing neural feed...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-card" style="margin-bottom: 4rem;">
+            <h2>🏆 Top Performing Mentors</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Mentor Profile</th>
+                        <th>Students</th>
+                        <th>Satisfaction</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="mentorLeaderboard">
+                    <!-- Leaderboard loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('access');
+        if (!token) window.location.href = '/login/';
+
+        Chart.defaults.color = 'rgba(148, 163, 184, 0.7)';
+        Chart.defaults.font.family = "'Outfit', sans-serif";
+        Chart.defaults.font.size = 13;
+
+        async function loadAnalytics() {
+            try {
+                const res = await fetch('http://127.0.0.1:8000/api/analytics/', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('loadingOverlay').style.opacity = '0';
+                    setTimeout(() => document.getElementById('loadingOverlay').style.display = 'none', 500);
+
+                    // Update stats with basic counting effect
+                    animateValue("valUsers", 0, data.summary.total_users, 1000);
+                    animateValue("valCourses", 0, data.summary.total_courses, 1000);
+                    animateValue("valEnrollments", 0, data.summary.total_enrollments, 1500);
+                    animateValue("valRating", 0, data.summary.avg_rating, 1000, true);
+
+                    document.getElementById('valHours').textContent = data.summary.total_hours + 'h content';
+                    document.getElementById('valGrowth').textContent = '+' + data.summary.recent_growth + ' recent';
+
+                    renderBarChart(data.charts.enrollments_by_course);
+                    renderDoughnutChart(data.charts.reviews_by_rating);
+                    renderPolarChart(data.charts.category_distribution);
+                    renderActivityFeed(data.recent_activity);
+                    renderLeaderboard(data.instructor_leaderboard);
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        function renderActivityFeed(activities) {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = '';
+            activities.forEach(act => {
+                const item = document.createElement('div');
+                item.className = `activity-item ${act.type}`;
+                const icon = act.type === 'enrollment' ? '👤' : '💬';
+                const action = act.type === 'enrollment' ? 'enrolled in' : 'reviewed';
+                const detail = act.detail ? `<span style="color: #fbbf24; margin-left: 10px;">★ ${act.detail}</span>` : '';
+
+                item.innerHTML = `
+                    <span class="time">${act.time}</span>
+                    <span class="user">${icon} ${act.user}</span> ${action} 
+                    <span style="color: var(--primary); font-weight: 600;">${act.item}</span>
+                    ${detail}
+                `;
+                feed.appendChild(item);
+            });
+        }
+
+        function renderLeaderboard(mentors) {
+            const tbody = document.getElementById('mentorLeaderboard');
+            tbody.innerHTML = '';
+            mentors.forEach(m => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><div class="mentor-name">${m.name}</div></td>
+                    <td><div class="mentor-stats">${m.enrollments} Learners</div></td>
+                    <td><span class="rating-chip">★ ${m.rating}</span></td>
+                    <td><span style="color: var(--accent-green); font-size: 0.8rem; font-weight: 700;">● TOP TIER</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderPolarChart(chartData) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(chartData),
+                    datasets: [{
+                        data: Object.values(chartData),
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(139, 92, 246, 0.6)',
+                            'rgba(16, 185, 129, 0.6)',
+                            'rgba(249, 115, 22, 0.6)',
+                            'rgba(239, 68, 68, 0.6)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { display: false } }
+                    },
+                    plugins: { legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } } }
+                }
+            });
+        }
+
+        function animateValue(id, start, end, duration, isFloat = false) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = progress * (end - start) + start;
+                obj.innerHTML = isFloat ? current.toFixed(1) : Math.floor(current);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function renderBarChart(chartData) {
+            const ctx = document.getElementById('enrollmentsChart').getContext('2d');
+            const labels = Object.keys(chartData).map(t => t.length > 20 ? t.substring(0, 20) + '...' : t);
+            const values = Object.values(chartData);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const { ctx, chartArea } = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
+                            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.8)');
+                            return gradient;
+                        },
+                        borderRadius: 12,
+                        borderWidth: 0,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+                            ticks: { padding: 10 }
+                        },
+                        x: { grid: { display: false }, ticks: { padding: 10 } }
+                    }
+                }
+            });
+        }
+
+        function renderDoughnutChart(chartData) {
+            const ctx = document.getElementById('ratingsChart').getContext('2d');
+            const values = [1, 2, 3, 4, 5].map(s => chartData[s] || 0);
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.6)',
+                            'rgba(249, 115, 22, 0.6)',
+                            'rgba(234, 179, 8, 0.6)',
+                            'rgba(132, 204, 22, 0.6)',
+                            'rgba(16, 185, 129, 0.6)'
+                        ],
+                        hoverOffset: 20,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 30, usePointStyle: true } }
+                    }
+                }
+            });
+        }
+
+        loadAnalytics();
+    </script>
+</body>
+
+</html>

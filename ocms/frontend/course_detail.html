@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Player - OCMS.IO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Premium Obsidian */
+            --bg-color: #0B0F19;
+            --sidebar-bg: #1E293B;
+            --primary: #4F46E5;
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --secondary: #06B6D4;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+            --accent: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar - Course Content */
+        .sidebar {
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 2.5rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .sidebar-header .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .sidebar-header .back-link:hover {
+            color: #fff;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+
+        .curriculum {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Scrollbar */
+        .curriculum::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .curriculum::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .curriculum::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        .module {
+            margin-bottom: 2.5rem;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .module-num {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .module-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .lecture-item {
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .lecture-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--glass-border);
+            transform: translateX(4px);
+        }
+
+        .lecture-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 10px 20px -10px var(--primary-glow);
+        }
+
+        .lecture-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .lecture-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .lecture-duration {
+            font-size: 0.75rem;
+            opacity: 0.6;
+        }
+
+        .type-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.7rem;
+        }
+
+        .active .type-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .cinema-viewport {
+            width: 100%;
+            background: #000;
+            position: relative;
+            aspect-ratio: 21/9;
+            max-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        #videoContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .content-body {
+            background: var(--bg-color);
+            padding: 4rem;
+            flex-grow: 1;
+        }
+
+        .course-meta h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-meta p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin-bottom: 4rem;
+        }
+
+        /* Reviews Section */
+        .section-header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        .section-header .line {
+            flex-grow: 1;
+            height: 1px;
+            background: var(--glass-border);
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .review-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .student-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .rating {
+            color: #fbbf24;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .review-text {
+            color: var(--text-dim);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Review Form */
+        .form-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid var(--primary-glow);
+            padding: 3rem;
+            border-radius: 32px;
+            max-width: 800px;
+        }
+
+        .form-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 800;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--glass-border);
+            padding: 1.25rem;
+            border-radius: 16px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 1.25rem 3rem;
+            border-radius: 16px;
+            border: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 15px 30px -10px var(--primary-glow);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -10px var(--primary-glow);
+        }
+
+        /* Enrollment Overlay */
+        .enroll-overlay {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.95) 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+                height: auto;
+            }
+
+            .main-content {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="back-link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m15 18-6-6 6-6" />
+                    </svg>
+                    Home
+                </a>
+                <h2 id="sidebarCourseTitle">Advanced Curriculum</h2>
+            </div>
+            <div class="curriculum" id="moduleList">
+                <!-- Curriculum loaded here -->
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="cinema-viewport">
+                <div id="videoContainer">
+                    <div class="enroll-overlay" id="playerPlaceholder">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; letter-spacing: -1px;">Cinema Mode</h2>
+                        <p style="color: var(--text-dim); font-size: 1.1rem;">Select a lecture to begin your journey.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <section class="course-meta">
+                    <h1 id="courseTitle">Technical Architecture</h1>
+                    <p id="courseDesc">Deep dive into the core foundations and advanced patterns defined in this
+                        industry-leading curriculum.</p>
+                </section>
+
+                <section class="reviews-section">
+                    <div class="section-header">
+                        <h2>Student Feedback</h2>
+                        <div class="line"></div>
+                    </div>
+
+                    <div class="reviews-grid" id="reviewsList">
+                        <!-- Reviews loaded here -->
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 4rem;">
+                        <a id="allReviewsLink" href="#" class="btn-secondary"
+                            style="padding: 1rem 2rem; border-radius: 12px; font-weight: 700;">View Global Feedback
+                            Hub</a>
+                    </div>
+
+                    <div id="addReviewForm" style="display: none;">
+                        <div class="form-card">
+                            <h3>Share Your Experience</h3>
+                            <div class="form-group">
+                                <label>Star Rating</label>
+                                <select id="reviewRating">
+                                    <option value="5">★★★★★ Exceptional</option>
+                                    <option value="4">★★★★☆ Recommended</option>
+                                    <option value="3">★★★☆☆ Average</option>
+                                    <option value="2">★★☆☆☆ Poor</option>
+                                    <option value="1">★☆☆☆☆ Terrible</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Your Thoughts</label>
+                                <textarea id="reviewComment" rows="4"
+                                    placeholder="What did you learn? How did this course help your career?"></textarea>
+                            </div>
+                            <button class="submit-btn" onclick="submitReview()">Post Review</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('access');
+        if (!token) window.location.href = '/login/';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseId = urlParams.get('id');
+
+        async function loadCourse(id) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/courses/${id}/full/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const course = await response.json();
+                    document.getElementById('sidebarCourseTitle').textContent = course.title;
+                    document.getElementById('courseTitle').textContent = course.title;
+                    document.getElementById('courseDesc').textContent = course.description;
+
+                    renderReviews(course);
+                    document.getElementById('allReviewsLink').href = `/reviews/?course_id=${course.id}`;
+
+                    if (course.thumbnail_url) {
+                        const placeholder = document.getElementById('playerPlaceholder');
+                        placeholder.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('${course.thumbnail_url}')`;
+                        placeholder.style.backgroundSize = 'cover';
+                        placeholder.style.backgroundPosition = 'center';
+                    }
+
+                    const moduleList = document.getElementById('moduleList');
+                    moduleList.innerHTML = '';
+
+                    if (!course.is_enrolled) {
+                        moduleList.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding-top: 2rem;">Full access locked. Enrollment required.</div>';
+                        const container = document.getElementById('videoContainer');
+                        container.innerHTML = `
+                            <div class="enroll-overlay">
+                                <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; letter-spacing: -2px;">Elevate Your Career</h1>
+                                <p style="color: var(--text-dim); font-size: 1.25rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.6;">Join this professional learning path and unlock full access to all lectures, certifications, and resources.</p>
+                                <button onclick="enrollInCourse(${course.id})" class="submit-btn" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); min-width: 250px;">Enroll for $${course.price}</button>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    document.getElementById('addReviewForm').style.display = 'block';
+
+                    let firstLectureUrl = null;
+                    course.modules.forEach((mod, index) => {
+                        const modNum = String(index + 1).padStart(2, '0');
+                        let lecturesHtml = '';
+                        mod.lectures.forEach(lecture => {
+                            if (!firstLectureUrl && lecture.video_url) firstLectureUrl = lecture.video_url;
+
+                            let typeIcon = '🎬';
+                            if (lecture.lecture_type === 'lab') typeIcon = '🧪';
+                            if (lecture.lecture_type === 'quiz') typeIcon = '📝';
+
+                            lecturesHtml += `
+                                <div class="lecture-item" data-url="${lecture.video_url}">
+                                    <div class="lecture-info">
+                                        <span class="lecture-name">${lecture.title}</span>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <span class="type-icon">${typeIcon}</span>
+                                            <span class="lecture-duration">${lecture.duration || '15'} minutes</span>
+                                        </div>
+                                    </div>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                                </div>`;
+                        });
+                        moduleList.innerHTML += `<div class="module"><div class="module-header"><div class="module-num">${modNum}</div><div class="module-title">${mod.title}</div></div>${lecturesHtml}</div>`;
+                    });
+
+                    document.querySelectorAll('.lecture-item').forEach(item => {
+                        item.addEventListener('click', function () {
+                            document.querySelectorAll('.lecture-item').forEach(l => l.classList.remove('active'));
+                            this.classList.add('active');
+                            playVideo(this.getAttribute('data-url'));
+                        });
+                    });
+
+                    if (firstLectureUrl) {
+                        const firstItem = document.querySelector('.lecture-item');
+                        if (firstItem) { firstItem.classList.add('active'); playVideo(firstLectureUrl); }
+                    }
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        function renderReviews(course) {
+            const list = document.getElementById('reviewsList');
+            if (!course.reviews || course.reviews.length === 0) {
+                list.innerHTML = '<div style="grid-column: 1/-1; padding: 3rem; background: var(--card-bg); border-radius: 24px; text-align: center; color: var(--text-dim);">No peer feedback available yet.</div>';
+                return;
+            }
+            list.innerHTML = '';
+            course.reviews.forEach(r => {
+                const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                list.innerHTML += `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="student-info">
+                                <div class="student-avatar">${r.student[0]}</div>
+                                <div class="student-name">${r.student}</div>
+                            </div>
+                            <div class="rating">${stars}</div>
+                        </div>
+                        <p class="review-text">${r.comment}</p>
+                    </div>`;
+            });
+        }
+
+        async function enrollInCourse(id) {
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/api/courses/${id}/enroll/`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) window.location.reload();
+            } catch (err) { console.error(err); }
+        }
+
+        async function submitReview() {
+            const rating = document.getElementById('reviewRating').value;
+            const comment = document.getElementById('reviewComment').value;
+            if (!comment) return alert('Feedback required.');
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/api/courses/${courseId}/review/`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rating, comment })
+                });
+                if (res.ok) window.location.reload();
+            } catch (err) { console.error(err); }
+        }
+
+        function playVideo(url) {
+            const container = document.getElementById('videoContainer');
+            if (!url || url === 'null') return;
+
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const videoId = getYouTubeId(url);
+                if (videoId) {
+                    container.innerHTML = `<iframe width="100%" height="100%" style="border: none;" src="https://www.youtube.com/embed/${videoId}?autoplay=1" allowfullscreen></iframe>`;
+                    return;
+                }
+            }
+            container.innerHTML = `<video width="100%" height="100%" controls autoplay style="object-fit: contain;"><source src="${url}" type="video/mp4"></video>`;
+        }
+
+        function getYouTubeId(url) {
+            const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        if (courseId) loadCourse(courseId);
+    </script>
+</body>
+
+</html>

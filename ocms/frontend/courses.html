@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery - OCMS.IO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Premium Obsidian */
+            --bg-color: #0B0F19;
+            --primary: #4F46E5;
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --secondary: #06B6D4;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #F8FAFC;
+            --text-dim: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.08), transparent 40%);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 3rem;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        header {
+            margin-bottom: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .page-title h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-image {
+            height: 220px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .level-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 1px solid var(--glass-border);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .course-body {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+
+        .course-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .course-body p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .instructor {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .instructor-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .instructor span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .price-tag {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 2.5rem;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+                Back to Home
+            </a>
+        </nav>
+
+        <header>
+            <div class="page-title">
+                <h1>Discovery</h1>
+                <p>Learn from the world's leading experts in technology and design.</p>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="searchInput"
+                    placeholder="Search courses, skills, or mentors...">
+            </div>
+        </header>
+
+        <div class="course-grid" id="courseGrid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-dim);">
+                Initializing library...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('access');
+
+        async function loadCourses() {
+            const grid = document.getElementById('courseGrid');
+            try {
+                const headers = {};
+                // If a token is invalid it might trigger a 401, causing courses to not display.
+                // We'll fetch without token first, as courses are public on Discovery.
+
+                const response = await fetch('http://127.0.0.1:8000/api/courses/');
+
+                if (!response.ok) {
+                    console.error('API Error:', response.status);
+                    grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-dim);">Unable to fetch course library. (Error ${response.status})</div>`;
+                    return;
+                }
+
+                const result = await response.json();
+                // Handle both paginated and non-paginated responses
+                const courses = Array.isArray(result) ? result : (result.results || []);
+
+                if (courses.length > 0) {
+                    grid.innerHTML = '';
+
+                    const fallbackImages = [
+                        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1531297172867-4d1cccdb93cb?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&q=80&w=800',
+                        'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800'
+                    ];
+
+                    courses.forEach((course, index) => {
+                        const card = document.createElement('div');
+                        card.className = 'course-card';
+                        card.onclick = () => window.location.href = `/course-detail/?id=${course.id}`;
+
+                        const fallbackImg = fallbackImages[index % fallbackImages.length];
+                        const imgUrl = course.thumbnail_url && course.thumbnail_url !== 'null' ? course.thumbnail_url : fallbackImg;
+
+                        card.innerHTML = `
+                            <div class="card-image" style="background-image: url('${imgUrl}'); background-size: cover; background-position: center;">
+                                <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.9));"></div>
+                                <span class="level-badge">${course.level || 'General'}</span>
+                            </div>
+                            <div class="course-body">
+                                <span class="category">${course.category_name || 'Expert Series'}</span>
+                                <h3>${course.title}</h3>
+                                <p>${course.description}</p>
+                                <div class="card-footer">
+                                    <div class="instructor">
+                                        <div class="instructor-avatar">${course.instructor_name ? course.instructor_name[0] : 'I'}</div>
+                                        <span>${course.instructor_name || 'Elite Mentor'}</span>
+                                    </div>
+                                    <div class="price-tag">$${course.price}</div>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            } catch (err) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-dim);">Unable to connect to course library. Please check your connection.</div>';
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.course-card');
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                if (title.includes(term) || desc.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        loadCourses();
+    </script>
+</body>
+
+</html>

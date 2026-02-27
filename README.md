@@ -71,8 +71,7 @@ Redis (optional)
 PostgreSQL (optional)
 
 1. Clone the project
-git clone https://github.com/your-username/ocms.git
-cd ocms
+git clone https: https://github.com/VelamalaRahul/Online-Course-Management-System
 2. Create and activate virtual environment
 python -m venv env
 

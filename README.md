@@ -92,17 +92,16 @@ python manage.py createsuperuser
 6. Start the server
 python manage.py runserver
 
-Visit:
+Visit: http://127.0.0.1:8000/
 
-http://127.0.0.1:8000/
 🔐 Authentication Endpoints
 
 POST /api/token/ → generate access token
 
 POST /api/token/refresh/ → refresh token
 
-🌐 Main Routes
 
+🌐 Main Routes
 / – Home
 
 /login/ – User login
@@ -114,7 +113,6 @@ POST /api/token/refresh/ → refresh token
 /profile/ – User profile
 
 /reviews/ – Course reviews
-
 /admin/ – Django admin
 
 🧩 Design Overview
